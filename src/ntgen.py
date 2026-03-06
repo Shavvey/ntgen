@@ -28,6 +28,7 @@ def ntgen(input_filename: str, output_filename: str | None = None, ids: int = 1)
     nterms = get_terminal_names(collect_lines(get_file_lines(input_filename)))
     if output_filename != None:
         with open(output_filename, "w") as ofile:
+            ofile.write("/* Generated from external program, do not modify */\n")
             ofile.write("#ifndef INCLUDE_NTGEN_NTERM_H_\n")
             ofile.write("#define INCLUDE_NTGEN_NTERM_H_\n")
             for nterm in nterms:
@@ -35,6 +36,7 @@ def ntgen(input_filename: str, output_filename: str | None = None, ids: int = 1)
                 ids += 1
             ofile.write("#endif  // INCLUDE_NTGEN_NTERM_H_")
     else:
+        print("/* Generated from external program, do not modify */\n")
         print("#ifndef INCLUDE_NTGEN_NTERM_H_")
         print("#define INCLUDE_NTGEN_NTERM_H_")
         for nterm in nterms:
