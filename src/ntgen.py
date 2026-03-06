@@ -36,7 +36,7 @@ def ntgen(input_filename: str, output_filename: str | None = None, ids: int = 1)
                 ids += 1
             ofile.write("#endif  // INCLUDE_NTGEN_NTERM_H_")
     else:
-        print("/* Generated from external program, do not modify */\n")
+        print("/* Generated from external program, do not modify */")
         print("#ifndef INCLUDE_NTGEN_NTERM_H_")
         print("#define INCLUDE_NTGEN_NTERM_H_")
         for nterm in nterms:
