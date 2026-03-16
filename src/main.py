@@ -2,18 +2,21 @@ import ntgen as nt
 import sys
 
 
-def is_start_id(s: str) -> bool:
+def is_start_id(arg: str) -> bool:
+    """Decide arg is some start ID provided by user"""
     try:
-        int(s)
+        int(arg)
         return True
     except ValueError:
         return False
 
 
 def is_table_flag(s: str) -> bool:
+    """Decide if this is a flag for table generation"""
     if s.__eq__("-t") or s.__eq__("--table"):
         return True
     return False
+
 
 # very simple arg decoding scheme, held together by sticks and spit
 def next_arg(argv: list[str], cursor: int) -> None | str:
@@ -24,6 +27,7 @@ def next_arg(argv: list[str], cursor: int) -> None | str:
 
 
 def main():
+    """Main method"""
     if len(sys.argv) > 1:
         cursor = 1
         # decode output_file, should always be the first passed arg

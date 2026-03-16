@@ -4,12 +4,14 @@ from typing import TextIO
 
 
 def get_file_lines(filename: str) -> list[str]:
+    """Get all the lines of a file"""
     with open(filename, "r") as file:
         lines = file.readlines()
     return lines
 
 
 def collect_lines(lines: list[str]) -> str:
+    """Collect lines into one string"""
     sb = ""
     for line in lines:
         sb += line
@@ -17,6 +19,11 @@ def collect_lines(lines: list[str]) -> str:
 
 
 def get_terminal_names(file_content: str) -> list[str]:
+    """
+    Helper function that finds all the non-terminals
+    This is accomplished by using a regex to find all the non-terminals
+    resulting from each product rule in the bison file.
+    """
     matches = re.findall(r"\n+[a-z_]+\s*:\s*", file_content)
     sanitized_matches = []
     for match in matches:
@@ -52,6 +59,7 @@ def ntgen(
     start_id: int = 1,
     gen_table: bool = False,
 ):
+    """Main function -- writes all the IDs to output stream"""
     # first id is the start id, get inc after
     id: int = start_id
     nterms = get_terminal_names(collect_lines(get_file_lines(input_filename)))
