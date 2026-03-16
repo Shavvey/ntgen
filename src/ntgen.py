@@ -50,7 +50,7 @@ def write_table(input_filename: str, output_stream: TextIO, start_id: int = 1):
     for nterm in nterms[:-1]:
         output_stream.write(f'\t"{nterm}",\n')
     output_stream.write(f'\t"{nterms[-1]}"\n')
-    output_stream.write("}\n")
+    output_stream.write("};\n")
 
 
 def ntgen(
