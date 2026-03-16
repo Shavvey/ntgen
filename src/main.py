@@ -18,8 +18,8 @@ def is_table_flag(s: str) -> bool:
     return False
 
 
-# very simple arg decoding scheme, held together by sticks and spit
 def next_arg(argv: list[str], cursor: int) -> None | str:
+    """very simple arg decoding scheme, held together by sticks and spit"""
     if len(argv) > cursor:
         arg = argv[cursor]
         return arg
