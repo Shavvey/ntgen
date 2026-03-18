@@ -18,12 +18,21 @@ def is_table_flag(s: str) -> bool:
     return False
 
 
+def is_sep_flag(s: str) -> bool:
+    if s.__eq__("-s") or s.__eq__("--sep"):
+        return True
+    return False
+
+
 def next_arg(argv: list[str], cursor: int) -> None | str:
     """very simple arg decoding scheme, held together by sticks and spit"""
     if len(argv) > cursor:
         arg = argv[cursor]
         return arg
     return None
+
+
+global sep_filename
 
 
 def main():
@@ -36,6 +45,7 @@ def main():
         # initialize default state of optional args
         start_id: int = 1
         gen_table: bool = False
+        sep_filename: str | None = None
         output_file = None
         # begin decode args
         while True:
@@ -48,12 +58,23 @@ def main():
                 start_id = int(arg)
             elif is_table_flag(str(arg)):
                 gen_table = True
+            elif is_sep_flag(str(arg)):
+                sep_filename = str(next_arg(sys.argv, cursor))
+                cursor += 1
             else:
                 output_file = str(arg)
-        nt.ntgen(input_file, output_file, start_id=start_id, gen_table=gen_table)
+        nt.ntgen(
+            input_file,
+            output_file,
+            start_id=start_id,
+            gen_table=gen_table,
+            sep_filename=sep_filename,
+        )
 
     else:
-        print("Usage: INPUT-FILE [OUTPUT-FILE] [START-ID] [-t --table]")
+        print(
+            "Usage: INPUT-FILE [OUTPUT-FILE] [START-ID] [-t --table] [-s --sep FILENAME]"
+        )
 
 
 if __name__ == "__main__":
