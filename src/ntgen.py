@@ -51,7 +51,7 @@ def write_table(
     output_stream.write(f"#define NTERM_MAX_LEN {max_nterm_size}\n")
     output_stream.write(f"#define NTERM_ID_START {start_id}\n")
     if sep_filename != None:
-        output_stream.write(f"extern const char* NTERM_TABLE[];")
+        output_stream.write(f"extern const char* NTERM_TABLE[];\n")
         sep_output_stream = open(sep_filename, "w")
         sep_output_stream.write("const char *NTERM_TABLE[NTERM_TABLE_SIZE] = {\n")
         for nterm in nterms[:-1]:
