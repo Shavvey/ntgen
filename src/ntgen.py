@@ -1,5 +1,7 @@
+from os import close
 import re
 from sys import stdout
+from typing import TextIO
 
 
 def get_file_lines(filename: str) -> list[str]:
@@ -35,7 +37,7 @@ def get_terminal_names(file_content: str) -> list[str]:
 
 def write_table(
     input_filename: str,
-    output_filename: str | None = None,
+    output_stream: TextIO,
     start_id: int = 1,
     sep_filename: str | None = None,
 ):
@@ -45,21 +47,23 @@ def write_table(
     """
     nterms = get_terminal_names(collect_lines(get_file_lines(input_filename)))
     max_nterm_size = len(max(nterms, key=len)) + 1  # inc to account for null-term
-    output_stream = stdout if output_filename == None else open(output_filename, "w")
     output_stream.write(f"#define NTERM_TABLE_SIZE {len(nterms)}\n")
     output_stream.write(f"#define NTERM_MAX_LEN {max_nterm_size}\n")
     output_stream.write(f"#define NTERM_ID_START {start_id}\n")
-    if sep_filename is not None:
+    if sep_filename != None:
         output_stream.write(f"extern const char* NTERM_TABLE[];")
-        output_stream = open(sep_filename, "w")
-        output_stream.write(f"#include {output_filename}")
-        output_stream.write("const char *NTERM_TABLE[NTERM_TABLE_SIZE] = {")
+        sep_output_stream = open(sep_filename, "w")
+        sep_output_stream.write("const char *NTERM_TABLE[NTERM_TABLE_SIZE] = {\n")
+        for nterm in nterms[:-1]:
+            sep_output_stream.write(f'\t"{nterm}",\n')
+        sep_output_stream.write(f'\t"{nterms[-1]}"\n')
+        sep_output_stream.write("};\n")
     else:
-        output_stream.write("static char *NTERM_TABLE [NTERM_TABLE_SIZE] = {")
-    for nterm in nterms[:-1]:
-        output_stream.write(f'\t"{nterm}",\n')
-    output_stream.write(f'\t"{nterms[-1]}"\n')
-    output_stream.write("};\n")
+        output_stream.write("static char *NTERM_TABLE[NTERM_TABLE_SIZE] = {\n")
+        for nterm in nterms[:-1]:
+            output_stream.write(f'\t"{nterm}",\n')
+        output_stream.write(f'\t"{nterms[-1]}"\n')
+        output_stream.write("};\n")
 
 
 def ntgen(
@@ -87,6 +91,5 @@ def ntgen(
         output_stream.write(f"#define {nterm.upper()} {id}\n")
         id += 1
     if gen_table == True:
-        write_table(input_filename, output_filename, start_id, sep_filename)
+        write_table(input_filename, output_stream, start_id, sep_filename)
     output_stream.write("#endif  // INCLUDE_NTGEN_NTERM_H_\n")
-    output_stream.close()
